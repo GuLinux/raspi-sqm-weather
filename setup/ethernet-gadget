@@ -1,0 +1,44 @@
+#!/bin/bash
+
+help_message() {
+    echo "Usage: $0 on|off" >&2
+    exit ${1:-0}
+}
+
+toggle_sh_comment() {
+    file="$1"
+    line="$2"
+    enable="$3"
+    if [[ "$enable" == on ]]; then
+        search="#$line"
+        replace="$line"
+    else
+        search="$line"
+        replace="#$line"
+    fi
+    if ! grep -qEe "^$replace\$" "$file"; then
+        if grep -qEe "^$search\$" "$file"; then
+            sed -i "s/$search/$replace/g" "$file"
+        else
+            echo "$search" >> "$file"
+        fi
+    fi
+}
+
+toggle_gadget() {
+    toggle_sh_comment /boot/config.txt dtoverlay=dwc2 "$1"
+    toggle_sh_comment /etc/modules dwc2 "$1"
+    toggle_sh_comment /etc/modules g_ether "$1"
+}
+
+case "$1" in
+    on)
+        toggle_gadget on
+        ;;
+    off)
+        toggle_gadget off
+        ;;
+    *)
+        help_message
+        ;;
+esac
