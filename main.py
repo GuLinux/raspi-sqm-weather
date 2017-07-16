@@ -35,13 +35,22 @@ def main():
 
         if now - last_sqm_read > read_sqm_every:
             display.clear()
-            sqm_data = sqm_reader.read()
+            try:
+                sqm_data = sqm_reader.read()
+            except:
+                sqm_data: None
             last_sqm_read = now
             csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data)
 
+        display_brightness = 0
+        if sqm_data and sqm_data < 8:
+            display_brightness = 128
+        if sqm_data and sqm_data < 6.5:
+            display_brightness = 255
+
         display.set_weather(weather_data, render=False)
         display.set_sqm(sqm_data, render=False)
-        display.render()
+        display.render(contrast=display_brightness)
         time.sleep(1)
         
 

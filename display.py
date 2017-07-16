@@ -25,7 +25,7 @@ class Display:
         self.device.clear()
         self.device.hide()
 
-    def render(self):
+    def render(self, contrast=None):
         self.message['time'] = time.strftime('%H:%M', time.gmtime())
         if self.message != self.shown:
             with canvas(self.device) as draw:
@@ -36,6 +36,8 @@ class Display:
                 self.__draw_line('humidity', u'humidity: {:.3f}%', draw)
                 self.__draw_line('sqm', u'sqm: {:.3f}', draw)
             self.shown = self.message.copy()
+        if contrast is not None:
+            self.device.contrast(contrast)
         self.device.show()
 
     def __draw_line(self, keyword, format_string, draw, first=False):
