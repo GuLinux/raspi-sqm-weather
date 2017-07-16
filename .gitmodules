@@ -1,3 +1,6 @@
 [submodule "python-tsl2591"]
 	path = python-tsl2591
 	url = https://github.com/maxlklaxl/python-tsl2591
+[submodule "Adafruit_Python_BME280"]
+	path = Adafruit_Python_BME280
+	url = https://github.com/adafruit/Adafruit_Python_BME280

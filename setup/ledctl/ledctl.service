@@ -1,0 +1,13 @@
+[Unit]
+Description=Disables ACT0 led at startup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/toggle-actled off
+ExecStop=/usr/local/bin/toggle-actled on
+RemainAfterExit=true
+TimeoutSec=0
+
+[Install]
+WantedBy=multi-user.target
+

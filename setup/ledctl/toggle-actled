@@ -1,0 +1,13 @@
+#!/bin/bash
+
+trigger=none
+brightness=1
+
+if [[ "$1" == on ]]; then
+    trigger=mmc0
+    brightness=0
+fi
+
+echo "$trigger" > /sys/class/leds/led0/trigger
+echo "$brightness" > /sys/class/leds/led0/brightness
+
