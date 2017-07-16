@@ -38,7 +38,7 @@ def main():
             try:
                 sqm_data = sqm_reader.read()
             except:
-                sqm_data: None
+                sqm_data = None
             last_sqm_read = now
             csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data)
 
