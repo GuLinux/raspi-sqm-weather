@@ -28,7 +28,7 @@ def main():
  
 
     while True:
-       now = time.time()
+        now = time.time()
         if now - last_weather_read > read_weather_every:
             last_weather_read = now
             weather_data = weather.read()

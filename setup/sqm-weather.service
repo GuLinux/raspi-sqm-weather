@@ -4,6 +4,8 @@ Description=SQM and Weather station daemon
 [Service]
 Type=simple
 ExecStart=/usr/bin/python /home/pi/raspi-sqm-weather/main.py
+User=pi
+WorkingDirectory=/home/pi/raspi-sqm-weather
 
 [Install]
 WantedBy=multi-user.target

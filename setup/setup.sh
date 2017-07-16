@@ -83,7 +83,7 @@ setup_ledctl() {
 }
 
 setup_autostart() {
-    cp "$setup_dir/setup/sqm-weather.service" /etc/systemd/system
+    cp "$setup_dir/sqm-weather.service" /etc/systemd/system
     systemctl enable sqm-weather.service
     echo "To start the daemon, type:"
     echo "  sudo systemctl start sqm-weather"
