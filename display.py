@@ -9,17 +9,20 @@ class Display:
         self.message = {}
         self.__current_line = 0
 
-    def set_weather(self, weather_data):
-        self.message.update(weather_data)
-        self.render()
+    def set_weather(self, weather_data, render=True):
+        if weather_data:
+            self.message.update(weather_data)
+            if render:
+                self.render()
 
-    def set_sqm(self, sqm):
-        self.message['sqm'] = sqm
-        self.render()
+    def set_sqm(self, sqm, render=True):
+        if sqm:
+            self.message['sqm'] = sqm
+            if render:
+                self.render()
 
     def clear(self):
         self.device.clear()
-        #self.device.show()
         self.device.hide()
 
     def render(self):
