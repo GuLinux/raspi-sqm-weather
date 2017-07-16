@@ -82,6 +82,13 @@ setup_ledctl() {
     systemctl restart ledctl
 }
 
+setup_autostart() {
+    cp "$setup_dir/setup/sqm-weather.service" /etc/systemd/system
+    systemctl enable sqm-weather.service
+    echo "To start the daemon, type:"
+    echo "  sudo systemctl start sqm-weather"
+}
+
 setup_tsl2591
 pwd
 setup_Adafruit_Python_BME280
@@ -92,4 +99,5 @@ enable_ssh
 setup_hdmi
 setup_g_ether
 setup_ledctl
+setup_autostart
 

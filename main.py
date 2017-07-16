@@ -23,10 +23,12 @@ def main():
     last_weather_read = 0
     last_sqm_read = 0
 
+    weather_data = None
+    sqm_data = None
+ 
+
     while True:
-        weather_data = None
-        sqm_data = None
-        now = time.time()
+       now = time.time()
         if now - last_weather_read > read_weather_every:
             last_weather_read = now
             weather_data = weather.read()
