@@ -1,5 +1,6 @@
 import time
 from luma.core.render import canvas
+from PIL import ImageFont
 
 class Display:
     def __init__(self, device):
@@ -25,7 +26,7 @@ class Display:
         self.message['time'] = time.strftime('%H:%M', time.gmtime())
         if self.message != self.shown:
             with canvas(self.device) as draw:
-                draw.rectangle(self.device.bounding_box, outline="white", fill="black")
+                # draw.rectangle(self.device.bounding_box, outline="white", fill="black")
                 self.__draw_line('time', 'time: {} UTC', draw, first=True)
                 self.__draw_line('temp_degrees', u'temp: {:.3f}\u00B0C', draw)
                 self.__draw_line('hPa', u'press.: {:.3f} hPa', draw)
@@ -35,13 +36,16 @@ class Display:
         self.device.show()
 
     def __draw_line(self, keyword, format_string, draw, first=False):
-        font_size = 10
+        font = ImageFont.truetype('DejaVuSans.ttf', 11)
+        # font = ImageFont.truetype('DejaVuSerif.ttf', 9)
         if first:
             self.__current_line = 0
-        x = 3
-        y = 1 + (self.__current_line * font_size)
-        
+       
         if keyword in self.message:
-            draw.text((x, y), format_string.format(self.message[keyword]), fill='white')
+            message = format_string.format(self.message[keyword])
+            x = 0
+            y = 0 + (self.__current_line * font.getsize(message)[1])
+ 
+            draw.text((x, y), message, fill='white', font=font)
             self.__current_line += 1
 
