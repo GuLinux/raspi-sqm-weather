@@ -16,7 +16,7 @@ def main():
     sqm_reader = SQM()
 
     read_weather_every = 30
-    read_sqm_every = 60 * 2
+    read_sqm_every = 60 * 1
 
     last_weather_read = 0
     last_sqm_read = 0
@@ -27,6 +27,7 @@ def main():
             last_weather_read = now
             display.set_weather(weather.read())
         if now - last_sqm_read > read_sqm_every:
+            display.clear()
             display.set_sqm(sqm_reader.read())
             last_sqm_read = now
         display.render()

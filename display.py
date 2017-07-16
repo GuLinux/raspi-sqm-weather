@@ -32,6 +32,7 @@ class Display:
                 self.__draw_line('humidity', u'humidity: {:.3f}%', draw)
                 self.__draw_line('sqm', u'sqm: {:.3f}', draw)
             self.shown = self.message.copy()
+        self.device.show()
 
     def __draw_line(self, keyword, format_string, draw, first=False):
         font_size = 10
