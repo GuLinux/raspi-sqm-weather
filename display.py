@@ -17,7 +17,7 @@ class Display:
 
     def set_sqm(self, sqm, render=True):
         if sqm:
-            self.message['sqm'] = sqm['sqm']
+            self.message['sqm'] = sqm
             if render:
                 self.render()
 

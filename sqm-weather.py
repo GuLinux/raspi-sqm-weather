@@ -1,22 +1,20 @@
 #!/usr/bin/python
-
 import time
 from display import Display
-
-from luma.core.interface.serial import spi, i2c
-from luma.oled.device import ssd1306
 from weather import WeatherSensor
 from sqm import SQM
+
 from csv_logger import CSVLogger
+import config
+import traceback
+
 
 def main():
-    # serial = spi(device=0, port=0, gpio_DC=23, gpio_RST=25)
-    serial = i2c(port=1, address=0x3C)
-    device = ssd1306(serial)
-    display = Display(device)
-    weather = WeatherSensor()
-    sqm_reader = SQM()
-    csv = CSVLogger('/home/pi/sqm_weather.csv')
+    display = Display(config.display_device)
+    weather = WeatherSensor(config.weather_sensor)
+    sqm_reader = SQM(config.light_sensor, config.light_sensor_config)
+
+    csv = CSVLogger(config.csv_logfile)
 
     read_weather_every = 30
     read_sqm_every = 60 * 1
@@ -39,6 +37,7 @@ def main():
             try:
                 sqm_data = sqm_reader.read_median_sqm()
             except:
+                traceback.print_exc()
                 sqm_data = None
             last_sqm_read = now
             csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data)
