@@ -28,3 +28,7 @@ light_sensor_config = {
 import os
 
 csv_logfile = os.path.join(os.environ['HOME'], 'sqm-weather.csv')
+
+read_weather_every = 30
+read_sqm_every = 60 * 1
+

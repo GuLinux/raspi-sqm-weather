@@ -16,9 +16,7 @@ def main():
 
     csv = CSVLogger(config.csv_logfile)
 
-    read_weather_every = 30
-    read_sqm_every = 60 * 1
-
+    
     last_weather_read = 0
     last_sqm_read = 0
 
@@ -28,11 +26,11 @@ def main():
 
     while True:
         now = time.time()
-        if now - last_weather_read > read_weather_every:
+        if now - last_weather_read > config.read_weather_every:
             last_weather_read = now
             weather_data = weather.read()
 
-        if now - last_sqm_read > read_sqm_every:
+        if now - last_sqm_read > config.read_sqm_every:
             display.clear()
             try:
                 sqm_data = sqm_reader.read_median_sqm()
