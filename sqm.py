@@ -44,12 +44,3 @@ class SQM:
             raise OverflowError('Gain too high')
 
 
-    def __get_sqm(self, setting):
-        self.device.set_gain(setting[0])
-        reading = self.device.get_full_luminosity()
-        if 0xFFFF in reading:
-            raise OverflowError('Gain too high')
-        visible = reading[0] - reading[1]
-        adjustedVisible = visible / setting[1]
-        return adjustedVisible
-
