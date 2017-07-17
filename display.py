@@ -17,7 +17,7 @@ class Display:
 
     def set_sqm(self, sqm, render=True):
         if sqm:
-            self.message['sqm'] = sqm
+            self.message['sqm'] = sqm['sqm']
             if render:
                 self.render()
 
@@ -30,24 +30,29 @@ class Display:
         if self.message != self.shown:
             with canvas(self.device) as draw:
                 # draw.rectangle(self.device.bounding_box, outline="white", fill="black")
-                self.__draw_line('time', 'time: {} UTC', draw, first=True)
-                self.__draw_line('temp_degrees', u'temp: {:.3f}\u00B0C', draw)
-                self.__draw_line('hPa', u'press.: {:.3f} hPa', draw)
-                self.__draw_line('humidity', u'humidity: {:.3f}%', draw)
-                self.__draw_line('sqm', u'sqm: {:.3f}', draw)
+                self.__draw_line('time', 'time: {} UTC', '{}', draw, first=True)
+                self.__draw_line('temp_degrees', u'temp: {}\u00B0C', '{:.3f}', draw)
+                self.__draw_line('hPa', u'press.: {} hPa', '{:.3f}', draw)
+                self.__draw_line('humidity', u'humidity: {}%', '{:.3f}', draw)
+                self.__draw_line('sqm', u'sqm: {}', '{:.3f}', draw)
             self.shown = self.message.copy()
         if contrast is not None:
             self.device.contrast(contrast)
         self.device.show()
 
-    def __draw_line(self, keyword, format_string, draw, first=False):
+    def __draw_line(self, keyword, format_string, format_num, draw, first=False):
         font = ImageFont.truetype('DejaVuSans.ttf', 11)
         # font = ImageFont.truetype('DejaVuSerif.ttf', 9)
         if first:
             self.__current_line = 0
        
         if keyword in self.message:
-            message = format_string.format(self.message[keyword])
+            try:
+                value = format_num.format(self.message[keyword])
+            except ValueError:
+                value = self.message[keyword]
+
+            message = format_string.format(value)
             x = 0
             y = 0 + (self.__current_line * font.getsize(message)[1])
  

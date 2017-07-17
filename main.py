@@ -3,14 +3,15 @@
 import time
 from display import Display
 
-from luma.core.interface.serial import spi
+from luma.core.interface.serial import spi, i2c
 from luma.oled.device import ssd1306
 from weather import WeatherSensor
 from sqm import SQM
 from csv_logger import CSVLogger
 
 def main():
-    serial = spi(device=0, port=0, gpio_DC=23, gpio_RST=25)
+    # serial = spi(device=0, port=0, gpio_DC=23, gpio_RST=25)
+    serial = i2c(port=1, address=0x3C)
     device = ssd1306(serial)
     display = Display(device)
     weather = WeatherSensor()
@@ -40,7 +41,7 @@ def main():
             except:
                 sqm_data = None
             last_sqm_read = now
-            csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data)
+            csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data['sqm'], sqm_data['readings_avg'])
 
         display_brightness = 0
         if sqm_data and sqm_data < 8:

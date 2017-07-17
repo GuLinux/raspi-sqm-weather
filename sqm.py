@@ -3,9 +3,15 @@
 
 from tsl2591.read_tsl import *
 import math
+import traceback
+import numpy
 
 class SQM:
-    def __init__(self, avg_readings = 5):
+    CALIBRATION_CONSTANT = 13.761
+    #CALIBRATION_CONSTANT = 0
+    CALIBRATION_LINEAR = 1
+
+    def __init__(self, avg_readings = 10):
         self.device = Tsl2591(integration=INTEGRATIONTIME_600MS)
         self.avg_readings = avg_readings
         self.settings = [
@@ -20,12 +26,18 @@ class SQM:
             try:
                 readings = [self.__get_sqm(setting) for i in range(0, self.avg_readings)]
                 avg = reduce(lambda a, b: a+b, readings) / len(readings)
+                median = numpy.median(readings)
+                raw_value = median
+
                 #sqm = -1.085736205 * math.log(0.925925925 * math.pow(10,-5.)*avg);
-                sqm = -1.09482135 * math.log(0.925925925 * math.pow(10,-5.)*avg)
-                return sqm
+                sqm = SQM.CALIBRATION_CONSTANT -2.5 * math.log10(raw_value) * SQM.CALIBRATION_LINEAR
+                return {'sqm': sqm, 'readings_avg': raw_value}
             except OverflowError:
                 pass
-        return None
+            except:
+                traceback.print_exc()
+                
+        return {'sqm': 'n/a', 'readings_avg': 'n/a'}
 
 
 

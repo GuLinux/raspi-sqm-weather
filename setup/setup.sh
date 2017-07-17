@@ -11,7 +11,7 @@ if [[ "$EUID" != 0 ]]; then
 fi
 
 sudo -u pi git submodule init && sudo -u pi git submodule update
-sudo apt-get install -y python-dev libjpeg-dev python-pip libfreetype6-dev fonts-dejavu-core
+sudo apt-get install -y python-dev libjpeg-dev python-pip libfreetype6-dev fonts-dejavu-core python-numpy
 pip install -r requirements.txt
 
 setup_tsl2591() {
