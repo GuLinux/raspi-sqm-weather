@@ -21,24 +21,27 @@ class SQM:
             (GAIN_LOW, 1.0)
         ]
 
-    def read(self):
+    def read_median_sqm(self, readings=10):
+        readings = [self.read_raw() for n in range(0, readings)]
+        sqm_calibrated_values = [self.sqm(reading, calibration=SQM.CALIBRATION_CONSTANT) for reading in readings]
+        return numpy.median(sqm_calibrated_values)
+
+    def sqm(self, reading, calibration=0):
+        return calibration - 2.5 * math.log10( reading[0] - reading[1])
+
+    def read_raw(self):
         for setting in self.settings:
             try:
-                readings = [self.__get_sqm(setting) for i in range(0, self.avg_readings)]
-                avg = reduce(lambda a, b: a+b, readings) / len(readings)
-                median = numpy.median(readings)
-                raw_value = median
+                return tuple([x / setting[1] for x in self.__raw_scaled(setting)])
+            except OverflowError as e:
+                if setting[0] == GAIN_LOW:
+                    raise e
 
-                #sqm = -1.085736205 * math.log(0.925925925 * math.pow(10,-5.)*avg);
-                sqm = SQM.CALIBRATION_CONSTANT -2.5 * math.log10(raw_value) * SQM.CALIBRATION_LINEAR
-                return {'sqm': sqm, 'readings_avg': raw_value}
-            except OverflowError:
-                pass
-            except:
-                traceback.print_exc()
-                
-        return {'sqm': 'n/a', 'readings_avg': 'n/a'}
-
+    def __raw_scaled(self, setting):
+        self.device.set_gain(setting[0])
+        reading = self.device.get_full_luminosity()
+        if 0xFFFF in reading:
+            raise OverflowError('Gain too high')
 
 
     def __get_sqm(self, setting):

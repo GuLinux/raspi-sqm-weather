@@ -8,18 +8,17 @@ class CSVLogger:
             self.csv_file = open(csv_file, 'a')
         else:
             self.csv_file = open(csv_file, 'w')
-            self.csv_file.write('timestamp,datetime_utc,t_celsius,humidity,hPa,sqm, light_sensor_reading_raw\n')
+            self.csv_file.write('timestamp,datetime_utc,t_celsius,humidity,hPa,sqm\n')
         self.csv_file.flush()
 
-    def line(self, t_celsius, humidity, hPa, sqm, light_sensor_reading):
-        self.csv_file.write('{timestamp},{datetime_utc},{t_celsius},{humidity},{hPa}, {sqm}, {light_sensor_reading}\n'.format(
+    def line(self, t_celsius, humidity, hPa, sqm):
+        self.csv_file.write('{timestamp},{datetime_utc},{t_celsius},{humidity},{hPa}, {sqm}\n'.format(
                timestamp=time.time(),
                datetime_utc=datetime.datetime.utcnow().isoformat(),
                t_celsius=self.__float(t_celsius),
                humidity=self.__float(humidity),
                hPa=self.__float(hPa),
-               sqm=self.__float(sqm),
-               light_sensor_reading=light_sensor_reading
+               sqm=self.__float(sqm)
             )
         )
 
