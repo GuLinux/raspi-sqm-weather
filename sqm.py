@@ -11,10 +11,9 @@ class SQM:
     #CALIBRATION_CONSTANT = 0
     CALIBRATION_LINEAR = 1
 
-    def __init__(self, light_sensor, light_sensor_config, avg_readings = 10):
+    def __init__(self, light_sensor, light_sensor_config):
         self.light_sensor = light_sensor
         self.light_sensor_config = light_sensor_config
-        self.avg_readings = avg_readings
 
     def read_median_sqm(self, readings=10):
         readings = [self.read_raw() for n in range(0, readings)]
@@ -35,7 +34,7 @@ class SQM:
                     return tuple([x / gain_setting[1] for x in self.__raw_scaled(gain_setting)])
                 return readings / gain_setting[1]
             except OverflowError as e:
-                if gain_setting[0] == GAIN_LOW:
+                if gain_setting[0] == self.light_sensor_config['gain_settings'][-1]:
                     raise e
 
     def __raw_scaled(self, gain_setting):

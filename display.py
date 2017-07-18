@@ -3,11 +3,13 @@ from luma.core.render import canvas
 from PIL import ImageFont
 
 class Display:
-    def __init__(self, device):
+    def __init__(self, device, logger):
         self.device = device
         self.shown = {}
         self.message = {}
         self.__current_line = 0
+        self.__contrast = None
+        self.logger = logger
 
     def set_weather(self, weather_data, render=True):
         if weather_data:
@@ -36,8 +38,10 @@ class Display:
                 self.__draw_line('humidity', u'humidity: {}%', '{:.3f}', draw)
                 self.__draw_line('sqm', u'sqm: {}', '{:.3f}', draw)
             self.shown = self.message.copy()
-        if contrast is not None:
+        if contrast is not None and self.__contrast != contrast:
             self.device.contrast(contrast)
+            self.__contrast = contrast
+            self.logger.debug('Setting contrast to %d', contrast)
         self.device.show()
 
     def __draw_line(self, keyword, format_string, format_num, draw, first=False):

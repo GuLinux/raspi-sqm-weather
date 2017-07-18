@@ -1,3 +1,8 @@
+logger = logging.getLogger('sqm-weather')
+logger.setLevel(logging.DEBUG)
+
+
+
 # Weather
 class WeatherSimulator:
     def read_temperature(self):
@@ -33,6 +38,7 @@ light_sensor_config = {
             (1, 1.0)
     ]
 }
+sqm_readings = 2
 
 import os
 csv_logfile = os.path.join(os.environ['HOME'], 'sqm-weather.csv')

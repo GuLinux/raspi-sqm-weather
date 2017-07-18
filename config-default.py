@@ -1,5 +1,15 @@
+import logging
+import os
+
+logging.basicConfig(filename=os.path.join(os.environ['HOME'], 'sqm-weather.log'))
+logger = logging.getLogger('sqm-weather')
+logger.setLevel(logging.DEBUG)
+
+
 # Weather
 from Adafruit_BME280 import *
+
+
 
 weather_sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
@@ -25,7 +35,8 @@ light_sensor_config = {
     ]
 }
 
-import os
+sqm_readings = 6
+
 
 csv_logfile = os.path.join(os.environ['HOME'], 'sqm-weather.csv')
 

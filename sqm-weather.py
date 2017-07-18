@@ -10,7 +10,7 @@ import traceback
 
 
 def main():
-    display = Display(config.display_device)
+    display = Display(config.display_device, config.logger)
     weather = WeatherSensor(config.weather_sensor)
     sqm_reader = SQM(config.light_sensor, config.light_sensor_config)
 
@@ -33,9 +33,9 @@ def main():
         if now - last_sqm_read > config.read_sqm_every:
             display.clear()
             try:
-                sqm_data = sqm_reader.read_median_sqm()
+                sqm_data = sqm_reader.read_median_sqm(readings=config.sqm_readings)
             except:
-                traceback.print_exc()
+                config.logger.error('Error retrieving sqm data: ', exc_info=True)
                 sqm_data = None
             last_sqm_read = now
             csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data)
