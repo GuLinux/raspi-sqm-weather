@@ -13,14 +13,17 @@ def main():
     csv_file.write('timestamp,datetime_utc,t_celsius, reading_fs, reading_ir, sqm\n')
 
     while(True):
+        time.sleep(1)
         weather_data, sqm_data = None, None
         try:
             weather_data = weather.read()
             sqm_data = sqm_reader.read_raw()
         except:
+            config.logger.error('Error reading data: ', exc_info=True)
             continue
 
         if not weather_data or not sqm_data:
+            config.logger.warning('Data is empty, skipping')
             continue
 
         sqm_uncalibrated = sqm_reader.sqm(sqm_data)
@@ -35,6 +38,9 @@ def main():
             reading_ir=ir_value,
             sqm=sqm_uncalibrated
         ))
+        csv_file.flush()
+
+
                
 
 if __name__ == "__main__":
