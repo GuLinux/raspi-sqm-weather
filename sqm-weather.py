@@ -12,7 +12,7 @@ import traceback
 def main():
     display = Display(config.display_device, config.logger)
     weather = WeatherSensor(config.weather_sensor)
-    sqm_reader = SQM(config.light_sensor, config.light_sensor_config)
+    sqm_reader = SQM(config)
 
     csv = CSVLogger(config.csv_logfile)
 
@@ -20,9 +20,7 @@ def main():
     last_weather_read = 0
     last_sqm_read = 0
 
-    weather_data = None
-    sqm_data = None
- 
+    weather_data, sqm_data, sqm_frequency = None, None, None
 
     while True:
         now = time.time()
@@ -33,12 +31,12 @@ def main():
         if now - last_sqm_read > config.read_sqm_every:
             display.clear()
             try:
-                sqm_data = sqm_reader.read_median_sqm(readings=config.sqm_readings)
+                sqm_data, sqm_frequency = sqm_reader.read_median_sqm(readings=config.sqm_readings)
             except:
                 config.logger.error('Error retrieving sqm data: ', exc_info=True)
-                sqm_data = None
+                sqm_data, sqm_frequency = None, None
             last_sqm_read = now
-            csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data)
+            csv.line(weather_data['temp_degrees'], weather_data['humidity'], weather_data['hPa'], sqm_data, sqm_frequency)
 
         display_brightness = 0
         if sqm_data and sqm_data < 8:
